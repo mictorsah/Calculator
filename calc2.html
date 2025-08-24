@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dynamic Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .slide-enter {
+        opacity: 0;
+        transform: translateX(100%);
+      }
+      .slide-enter-active {
+        opacity: 1;
+        transform: translateX(0);
+        transition: all 0.6s ease;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-black text-white flex items-center justify-center min-h-screen"
+  >
+    <!-- Main container -->
+    <div class="relative w-full max-w-xl px-6 flex items-center justify-center">
+      <!-- Calculators -->
+      <div
+        id="calculator-container"
+        class="overflow-hidden relative h-80 flex items-center justify-center w-full"
+      >
+        <!-- Circle Calculator -->
+        <div class="calc absolute w-full text-center" id="circle">
+          <h2 class="text-2xl font-bold mb-4">Circle Calculator</h2>
+          <input
+            id="radius"
+            type="number"
+            placeholder="Radius (m)"
+            class="w-full p-2 rounded bg-gray-800 text-white focus:ring-2 focus:ring-blue-500"
+          />
+          <button
+            onclick="calcCircle()"
+            class="mt-4 px-6 py-2 rounded bg-blue-600 hover:bg-blue-700 transition shadow-lg"
+          >
+            Calculate
+          </button>
+          <p id="circleResult" class="mt-3 text-lg text-green-400"></p>
+        </div>
+
+        <!-- Pythagoras Calculator -->
+        <div class="calc absolute w-full hidden text-center" id="pythagoras">
+          <h2 class="text-2xl font-bold mb-4">Pythagoras Calculator</h2>
+          <input
+            id="adj"
+            type="number"
+            placeholder="Breadth (m)"
+            class="w-full p-2 rounded bg-gray-800 text-white mb-2"
+          />
+          <input
+            id="height"
+            type="number"
+            placeholder="Height (m)"
+            class="w-full p-2 rounded bg-gray-800 text-white"
+          />
+          <button
+            onclick="calcPythagoras()"
+            class="mt-4 px-6 py-2 rounded bg-purple-600 hover:bg-purple-700 transition shadow-lg"
+          >
+            Calculate
+          </button>
+          <p id="pythagorasResult" class="mt-3 text-lg text-green-400"></p>
+        </div>
+      </div>
+
+      <!-- Arrows -->
+      <!-- Arrows fixed outside the calculators -->
+        <button onclick="prevCalc()" 
+        class="absolute -left-16 top-1/2 -translate-y-1/2 
+               p-4 bg-gray-900 text-white text-2xl rounded-full 
+               hover:bg-blue-600 hover:scale-110 transition shadow-lg">
+  ⬅
+        </button>
+
+        <button onclick="nextCalc()" 
+        class="absolute -right-16 top-1/2 -translate-y-1/2 
+               p-4 bg-gray-900 text-white text-2xl rounded-full 
+               hover:bg-blue-600 hover:scale-110 transition shadow-lg">
+  ➡
+        </button>
+
+    <script>
+      const calculators = ["circle", "pythagoras"];
+      let current = 0;
+
+      function showCalc(index) {
+        document.querySelectorAll(".calc").forEach((calc) => {
+          calc.classList.add("hidden");
+          calc.classList.remove("slide-enter", "slide-enter-active");
+        });
+        const active = document.getElementById(calculators[index]);
+        active.classList.remove("hidden");
+        active.classList.add("slide-enter");
+        setTimeout(() => active.classList.add("slide-enter-active"), 10);
+      }
+
+      function nextCalc() {
+        current = (current + 1) % calculators.length;
+        showCalc(current);
+      }
+
+      function prevCalc() {
+        current = (current - 1 + calculators.length) % calculators.length;
+        showCalc(current);
+      }
+
+      // Circle
+      function calcCircle() {
+        const r = parseFloat(document.getElementById("radius").value);
+        if (isNaN(r)) return;
+        const circumference = 2 * Math.PI * r;
+        const area = Math.PI * r * r;
+        document.getElementById(
+          "circleResult"
+        ).textContent = `Circumference: ${circumference.toFixed(
+          2
+        )} m | Area: ${area.toFixed(2)} m²`;
+      }
+
+      // Pythagoras
+      function calcPythagoras() {
+        const a = parseFloat(document.getElementById("adj").value);
+        const h = parseFloat(document.getElementById("height").value);
+        if (isNaN(a) || isNaN(h)) return;
+        const hyp = Math.sqrt(a * a + h * h);
+        document.getElementById(
+          "pythagorasResult"
+        ).textContent = `Hypotenuse = ${hyp.toFixed(3)} m`;
+      }
+
+      // Init
+      showCalc(current);
+    </script>
+  </body>
+</html>
